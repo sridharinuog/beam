@@ -157,6 +157,7 @@ task javaPostCommit() {
 
 task sqlPostCommit() {
   dependsOn ":sdks:java:extensions:sql:postCommit"
+  dependsOn ":sdks:java:extensions:sql:runZetaSQLTest"
   dependsOn ":sdks:java:extensions:sql:jdbc:postCommit"
 }
 

@@ -39,6 +39,7 @@ import org.apache.beam.sdk.extensions.sql.meta.provider.ReadOnlyTableProvider;
 import org.apache.beam.sdk.extensions.sql.meta.provider.TableProvider;
 import org.apache.beam.sdk.extensions.sql.meta.provider.UdfUdafProvider;
 import org.apache.beam.sdk.extensions.sql.meta.store.InMemoryMetaStore;
+import org.apache.beam.sdk.extensions.sql.zetasql.ZetaSQLQueryPlanner;
 import org.apache.beam.sdk.options.PipelineOptions;
 import org.apache.beam.sdk.options.PipelineOptionsFactory;
 import org.apache.beam.sdk.transforms.Combine.CombineFn;
@@ -132,6 +133,8 @@ public class BeamSqlEnv {
   public static class BeamSqlEnvBuilder {
     private static final String CALCITE_PLANNER =
         "org.apache.beam.sdk.extensions.sql.impl.CalciteQueryPlanner";
+    private static final String ZETASQL_PLANNER =
+        "org.apache.beam.sdk.extensions.sql.zetasql.ZetaSQLQueryPlanner";
     private String queryPlannerClassName;
     private TableProvider defaultTableProvider;
     private String currentSchemaName;
@@ -307,6 +310,10 @@ public class BeamSqlEnv {
 
       if (queryPlannerClassName.equals(CALCITE_PLANNER)) {
         return new CalciteQueryPlanner(jdbcConnection, ruleSets);
+      }
+
+      if (queryPlannerClassName.equals(ZETASQL_PLANNER)) {
+        return new ZetaSQLQueryPlanner(jdbcConnection, ruleSets);
       }
 
       try {
